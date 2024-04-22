@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon_io/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon_io/favicon-16x16.png" />
+  <title>Monthly Calendar</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Sans-Serif;
+      background: rgb(102,45,140);
+      background: linear-gradient(90deg, rgba(102,45,140,1) 0%, rgba(102,45,140,1) 35%, rgba(237,30,121,1) 100%);
+      background-size: cover;
+      color: #fff;
+      padding: 2em;
+    }
+    
+    .container {
+      max-width: 800px; /* Increase max-width for responsiveness */
+      margin: 0 auto;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #fff;
+      font-size: 24px; /* Increase font size */
+    }
+    
+    .calendar {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+    
+    .calendar th,
+    .calendar td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+    
+    .current-day {
+      background-color: #007bff;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .month-select,
+    .year-select {
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    #current-date {
+      font-size: 18px; /* Increase font size */
+    }
+
+    @media screen and (max-width: 600px) {
+      .container {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Monthly Calendar</h1>
+
+  <div class="navigation">
+    <div>
+      <select class="month-select" id="month-select" onchange="changeMonth()">
+        <option value="1">January</option>
+        <option value="2">February</option>
+        <option value="3">March</option>
+        <option value="4">April</option>
+        <option value="5">May</option>
+        <option value="6">June</option>
+        <option value="7">July</option>
+        <option value="8">August</option>
+        <option value="9">September</option>
+        <option value="10">October</option>
+        <option value="11">November</option>
+        <option value="12">December</option>
+      </select>
+      <select class="year-select" id="year-select" onchange="changeYear()"></select>
+    </div>
+    <div id="current-date"></div>
+  </div>
+
+  <table class="calendar">
+    <thead>
+      <tr>
+        <th>Sun</th>
+        <th>Mon</th>
+        <th>Tue</th>
+        <th>Wed</th>
+        <th>Thu</th>
+        <th>Fri</th>
+        <th>Sat</th>
+      </tr>
+    </thead>
+    <tbody id="calendar-body">
+      <!-- Calendar dates will be populated here -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+  // Function to generate and display the monthly calendar
+  function generateCalendar(year, month) {
+    var calendarBody = document.getElementById('calendar-body');
+    var today = new Date();
+    var currentMonth = today.getMonth() + 1; // JavaScript months are zero-based
+    var currentDate = today.getDate();
+    var currentYear = today.getFullYear();
+
+    // Clear previous calendar
+    calendarBody.innerHTML = '';
+
+    // Get the number of days in the month
+    var daysInMonth = new Date(year, month, 0).getDate();
+
+    // Get the day of the week of the first day of the month
+    var firstDayOfMonth = new Date(year, month - 1, 1).getDay(); // JavaScript months are zero-based
+
+    // Generate calendar dates
+    var date = 1;
+    for (var i = 0; i < 6; i++) { // 6 rows for each week
+      var row = document.createElement('tr');
+      for (var j = 0; j < 7; j++) { // 7 days in a week
+        var cell = document.createElement('td');
+        if (i === 0 && j < firstDayOfMonth) {
+          var emptyCell = document.createElement('span');
+          cell.appendChild(emptyCell);
+        } else if (date > daysInMonth) {
+          break;
+        } else {
+          cell.textContent = date;
+          if (date === currentDate && month === currentMonth && year === currentYear) {
+            cell.classList.add('current-day');
+          }
+          date++;
+        }
+        row.appendChild(cell);
+      }
+      calendarBody.appendChild(row);
+    }
+  }
+
+  // Function to display current date
+  function displayCurrentDate() {
+    var currentDate = new Date();
+    var day = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
+    var date = currentDate.getDate();
+    var month = currentDate.toLocaleDateString('en-US', { month: 'long' });
+    var year = currentDate.getFullYear();
+    var hours = currentDate.getHours();
+    var minutes = currentDate.getMinutes();
+    var seconds = currentDate.getSeconds();
+
+    var currentDateTime = 'Today is ' + day + ', ' + month + ' ' + date + ', ' + year + '. Current Time: ' + formatTime(hours) + ':' + formatTime(minutes) + ':' + formatTime(seconds);
+    document.getElementById('current-date').textContent = currentDateTime;
+  }
+
+  // Function to format time with leading zero
+  function formatTime(time) {
+    return time < 10 ? '0' + time : time;
+  }
+
+  // Function to change the month
+  function changeMonth() {
+    var month = document.getElementById('month-select').value;
+    var year = document.getElementById('year-select').value;
+    generateCalendar(year, month);
+  }
+
+  // Function to change the year
+  function changeYear() {
+    var month = document.getElementById('month-select').value;
+    var year = document.getElementById('year-select').value;
+    generateCalendar(year, month);
+  }
+
+  // Function to initialize calendar and display current date
+  function initializeCalendar() {
+    // Populate year select options
+    var yearSelect = document.getElementById('year-select');
+    var currentYear = new Date().getFullYear();
+    for (var i = currentYear - 50; i <= currentYear + 50; i++) { // Updated to add more years
+      var option = document.createElement('option');
+      option.value = i;
+      option.textContent = i;
+      yearSelect.appendChild(option);
+    }
+
+    // Set default month and year
+    var today = new Date();
+    var currentMonth = today.getMonth() + 1; // JavaScript months are zero-based
+    var currentYear = today.getFullYear();
+    document.getElementById('month-select').value = currentMonth;
+    document.getElementById('year-select').value = currentYear;
+
+    // Generate calendar for current month
+    generateCalendar(currentYear, currentMonth);
+
+    // Display current date
+    displayCurrentDate();
+
+    // Update current date every second
+    setInterval(displayCurrentDate, 1000);
+  }
+
+  // Initialize calendar
+  initializeCalendar();
+</script>
+
+</body>
+</html>

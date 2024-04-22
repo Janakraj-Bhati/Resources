@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon_io/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon_io/favicon-16x16.png" />
+  <title>To-Do List Maker</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Sans-Serif;
+      background: rgb(102,45,140);
+      background: linear-gradient(90deg, rgba(102,45,140,1) 0%, rgba(102,45,140,1) 35%, rgba(237,30,121,1) 100%);
+      background-size: cover;
+      color: #fff;
+      padding: 2em;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: #fff;
+      text-align: center;
+    }
+    
+    .todo-container {
+      margin: 20px auto;
+      display: flex;
+      align-items: center;
+    }
+    
+    .todo-input {
+      flex-grow: 1;
+      width: calc(100% - 80px);
+      padding: 10px;
+      margin-right: 10px;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 20px;
+      background-color: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(10px);
+      color: #333;
+      font-size: 16px;
+      outline: none;
+    }
+    
+    .add-btn {
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+    
+    .add-btn:hover {
+      background-color: #218838;
+    }
+    
+    .todo-list {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .todo-item {
+      background-color: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(10px);
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .todo-item span {
+      flex-grow: 1;
+    }
+    
+    .remove-btn {
+      background-color: #ff4848;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    
+    .remove-btn:hover {
+      background-color: #e62727;
+    }
+
+    .save-btn {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    
+    .save-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>To-Do List Maker</h1>
+    
+    <div class="todo-container">
+      <input type="text" id="todo-input" class="todo-input" placeholder="Add new item">
+      <button onclick="addItem()" class="add-btn">Add</button>
+    </div>
+
+    <ul id="todo-list" class="todo-list">
+      <!-- Existing items will be displayed here -->
+    </ul>
+
+    <button onclick="saveList()" class="save-btn">Save List as Text File</button>
+  </div>
+
+  <script>
+    // Function to add a new item to the to-do list
+    function addItem() {
+      var input = document.getElementById('todo-input');
+      var text = input.value.trim();
+      if (text !== '') {
+        var listItem = document.createElement('li');
+        listItem.classList.add('todo-item');
+        listItem.innerHTML = '<span>' + text + '</span><button class="remove-btn" onclick="removeItem(this)">Remove</button>';
+        document.getElementById('todo-list').appendChild(listItem);
+        input.value = ''; // Clear input field after adding item
+      }
+    }
+
+    // Function to remove an item from the to-do list
+    function removeItem(button) {
+      var listItem = button.parentNode;
+      listItem.parentNode.removeChild(listItem);
+    }
+
+    // Function to save the to-do list to a text file
+    function saveList() {
+      var todoItems = document.querySelectorAll('.todo-item span');
+      var todoList = [];
+      todoItems.forEach(function(item) {
+        todoList.push(item.textContent);
+      });
+      var blob = new Blob([todoList.join('\n')], { type: 'text/plain' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'todo_list.txt';
+      a.click();
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon_io/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon_io/favicon-16x16.png" />
+  <title>Text Editor</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Sans-Serif;
+      background: rgb(102,45,140);
+      background: linear-gradient(90deg, rgba(102,45,140,1) 0%, rgba(102,45,140,1) 35%, rgba(237,30,121,1) 100%);
+      background-size: cover;
+      color: #fff;
+      padding: 2em;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: #fff;
+      text-align: center;
+    }
+    
+    .search-container {
+      margin: 20px auto;
+      text-align: center;
+    }
+    
+    .search-container label {
+      display: inline-block;
+      margin-right: 10px;
+      color: #fff;
+    }
+    
+    .search-container select,
+    .search-container input[type="number"] {
+      width: 150px;
+      padding: 10px;
+      margin: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      background-color: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(10px);
+      color: #333;
+      font-size: 16px;
+      outline: none;
+    }
+    
+    .search-container select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 9l-7 7-7-7"></path></svg>');
+      background-position: right 10px center;
+      background-repeat: no-repeat;
+    }
+
+    .search-container select:focus {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    button {
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 8px;
+    }
+    
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #editor {
+      width: 100%;
+      height: 300px;
+      padding: 10px;
+      margin-top: 20px;
+      background-color: rgba(255, 255, 255, 0.5);
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-sizing: border-box;
+      color: #333;
+      font-size: 16px;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Text Editor</h1>
+    
+    <div class="search-container">
+      <label for="font-family">Font Family:</label>
+      <select id="font-family">
+        <option value="Arial">Arial</option>
+        <option value="Verdana">Verdana</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="Courier New">Courier New</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Tahoma">Tahoma</option>
+        <option value="Impact">Impact</option>
+        <option value="Comic Sans MS">Comic Sans MS</option>
+        <option value="Lucida Console">Lucida Console</option>
+        <option value="Arial Black">Arial Black</option>
+        <option value="Trebuchet MS">Trebuchet MS</option>
+      </select>
+      <label for="text-size">Font Size:</label>
+      <input type="number" id="text-size" placeholder="Enter font size">
+      <button onclick="applyTextSettings()">Apply</button>
+    </div>
+
+    <textarea id="editor"></textarea>
+
+    <div class="search-container">
+      <button onclick="saveFile()">Save File</button>
+    </div>
+  </div>
+
+  <script>
+    function applyTextSettings() {
+      var fontSize = document.getElementById('text-size').value;
+      var fontFamily = document.getElementById('font-family').value;
+      var editor = document.getElementById('editor');
+      editor.style.fontSize = fontSize + 'px';
+      editor.style.fontFamily = fontFamily;
+    }
+
+    function saveFile() {
+      var text = document.getElementById('editor').value;
+      var blob = new Blob([text], { type: 'text/plain' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'text_file.txt';
+      a.click();
+    }
+  </script>
+
+</body>
+</html>
